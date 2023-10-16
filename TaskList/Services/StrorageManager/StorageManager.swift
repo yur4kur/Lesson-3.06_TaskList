@@ -8,7 +8,7 @@
 import Foundation
 import CoreData
 
-// MARK:  - Storage Manager
+// MARK: - Storage Manager
 final class StorageManager {
     
     // MARK: - Static properties

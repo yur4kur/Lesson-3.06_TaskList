@@ -43,8 +43,11 @@ final class TaskListViewController: UITableViewController {
 private extension TaskListViewController {
     func setupUI() {
         view.backgroundColor = .white
+        
         setupNavigationBar()
+        
         tableView.register(UITableViewCell.self, forCellReuseIdentifier: cellID)
+        
         fetchData()
     }
 }
@@ -85,8 +88,7 @@ private extension TaskListViewController {
             StorageManager.shared.save(task)
             self?.updateList()
         }
-        let cancelAction = UIAlertAction(title: "Cancel",
-                                         style: .destructive)
+        let cancelAction = UIAlertAction(title: "Cancel", style: .destructive)
         alert.addAction(saveAction)
         alert.addAction(cancelAction)
         alert.addTextField { textField in

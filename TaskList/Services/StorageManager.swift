@@ -50,14 +50,14 @@ final class StorageManager {
     }
     
     func fetch() -> [Task] {
-        var taskList: [Task] = []
         let fetchRequest = Task.fetchRequest()
-        
         do {
-            taskList = try context.fetch(fetchRequest)
-        } catch {
-            print(error)
-        }
-        return taskList
+            return (try? context.fetch(fetchRequest)) ?? []
+        } 
+    }
+    
+    func delete(_ task: Task) {
+        context.delete(task)
+        saveContext()
     }
 }

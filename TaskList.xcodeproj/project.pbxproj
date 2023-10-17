@@ -65,29 +65,28 @@
 			path = Storyboards;
 			sourceTree = "<group>";
 		};
-		6A778A932ADD5AC9006D96CE /* Scenes */ = {
+		6A778A932ADD5AC9006D96CE /* ViewControllers */ = {
 			isa = PBXGroup;
 			children = (
 				A83A1D5629D9ECCA000B0D27 /* TaskListViewController.swift */,
 			);
-			path = Scenes;
+			path = ViewControllers;
 			sourceTree = "<group>";
 		};
 		6A778A942ADD5B0C006D96CE /* Services */ = {
 			isa = PBXGroup;
 			children = (
-				6A778A972ADD5FC4006D96CE /* StrorageManager */,
+				6A778A982ADD5FE3006D96CE /* StorageManager.swift */,
 			);
 			path = Services;
 			sourceTree = "<group>";
 		};
-		6A778A972ADD5FC4006D96CE /* StrorageManager */ = {
+		6A778A9A2ADEEA79006D96CE /* Models */ = {
 			isa = PBXGroup;
 			children = (
-				6A778A982ADD5FE3006D96CE /* StorageManager.swift */,
 				A83A1D5B29D9ECCA000B0D27 /* TaskList.xcdatamodeld */,
 			);
-			path = StrorageManager;
+			path = Models;
 			sourceTree = "<group>";
 		};
 		A83A1D4629D9ECCA000B0D27 = {
@@ -112,7 +111,8 @@
 				6A778A902ADD59D5006D96CE /* Config */,
 				6A778A912ADD5A05006D96CE /* Resources */,
 				6A778A942ADD5B0C006D96CE /* Services */,
-				6A778A932ADD5AC9006D96CE /* Scenes */,
+				6A778A9A2ADEEA79006D96CE /* Models */,
+				6A778A932ADD5AC9006D96CE /* ViewControllers */,
 				6A778A922ADD5AAD006D96CE /* Storyboards */,
 			);
 			path = TaskList;

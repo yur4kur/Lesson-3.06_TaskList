@@ -8,14 +8,11 @@
 import UIKit
 import CoreData
 
+// MARK: - AppDelegate
 @main
 final class AppDelegate: UIResponder, UIApplicationDelegate {
 
-    func application(_ application: UIApplication,
-                     didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
-        true
-    }
-
+    // MARK: - Public methods
     func applicationWillTerminate(_ application: UIApplication) {
         StorageManager.shared.saveContext()
     }

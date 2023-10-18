@@ -43,10 +43,12 @@ final class StorageManager {
     }
     
     // MARK: CRUD
-    func save(_ taskName: String) {
+    func save(_ taskName: String,
+              _ completion: (Task) -> Void) {
         let task = Task(context: context)
         task.title = taskName
         saveContext()
+        completion(task)
     }
     
     func fetch() -> [Task] {
@@ -56,8 +58,20 @@ final class StorageManager {
         } 
     }
     
-    func delete(_ task: Task) {
+    func update(_ updatedTask: Task,
+                with newName: String,
+                _ completion: (Task) -> Void) {
+        let tasks = fetch()
+        guard let task = tasks.first(where: { $0 == updatedTask}) else { return }
+        task.title = newName
+        saveContext()
+        completion(task)
+    }
+    
+    func delete(_ task: Task,
+                _ completion: (Task) -> Void) {
         context.delete(task)
         saveContext()
+        completion(task)
     }
 }

@@ -9,13 +9,15 @@ import UIKit
 import CoreData
 
 // MARK: - TaskListViewController
+
 final class TaskListViewController: UITableViewController {
     
     // MARK: - Private properties
-    private let cellID = "task"
+    
+    private let cellID = Constants.cellID
     private var taskList: [Task] = []
 
-    // MARK: ViewController lifecycle methods
+    // MARK: Lifecycle methods
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -24,18 +26,22 @@ final class TaskListViewController: UITableViewController {
     
     // MARK: - Private methods
 
+    /// Show alert for adding a task
     private func addNewTask() {
-        showAlert(withTitle: "New Task",
-                  andMessage: "What do you want to do?")
+        showAlert(withTitle: Constants.newTaskAlertTitle,
+                  andMessage: Constants.newTaskAlertMessage)
     }
     
+    /// Show alert for changing a task
     private func updateTask(_ task: Task) {
-        showAlert(withTitle: "Update Task",
-                  andMessage: "What do you want to change?",
+        showAlert(withTitle: Constants.updateTaskAlertTitle,
+                  andMessage: Constants.updateTaskAlertMessage,
                   task: task)
     }
     
     // MARK: TaskList CRUD methods
+    
+    /// Save a task to DB and add it to the list
     private func save(_ taskName: String) {
         StorageManager.shared.save(taskName) { task in
             taskList.append(task)
@@ -45,10 +51,12 @@ final class TaskListViewController: UITableViewController {
         tableView.insertRows(at: [indexPath], with: .automatic)
     }
     
+    /// Get tasks from DB
     private func fetchData() {
         taskList = StorageManager.shared.fetch()
     }
     
+    /// Update a task in DB as well as in the list
     private func update(oldTask: Task, with newTaskName: String)  {
         StorageManager.shared.update(oldTask, with: newTaskName) { task in
             if let index = taskList.firstIndex(of: oldTask) {
@@ -58,6 +66,7 @@ final class TaskListViewController: UITableViewController {
         tableView.reloadData()
     }
     
+    /// Delete task from DB and also from the list
     private func delete(_ task: Task, index: Int) {
         StorageManager.shared.delete(task) { task in
             taskList.remove(at: index)
@@ -66,6 +75,7 @@ final class TaskListViewController: UITableViewController {
 }
 
 // MARK: - UITableViewDataSource
+
 extension TaskListViewController {
     override func tableView(_ tableView: UITableView,
                             numberOfRowsInSection section: Int) -> Int {
@@ -88,6 +98,7 @@ extension TaskListViewController {
 }
 
 // MARK: - UITableViewDelegate
+
 extension TaskListViewController {
     
     // MARK: Update task in a row
@@ -110,8 +121,11 @@ extension TaskListViewController {
 }
 
 // MARK: - Setting View
+
 private extension TaskListViewController {
+    
     func setupUI() {
+        
         setupView()
         
         setupNavigationBar()
@@ -126,19 +140,23 @@ private extension TaskListViewController {
 private extension TaskListViewController {
     
     // MARK: Configure view
+    
     func setupView() {
         view.backgroundColor = .white
     }
     
     // MARK: Configure Navigation Bar
+    
     func setupNavigationBar() {
-        title = "Task List"
+        
+        title = Constants.navBarTitle
         navigationController?.navigationBar.prefersLargeTitles = true
         
         let navBarAppearance = UINavigationBarAppearance()
+        
         navBarAppearance.titleTextAttributes = [.foregroundColor: UIColor.white]
         navBarAppearance.largeTitleTextAttributes = [.foregroundColor: UIColor.white]
-        navBarAppearance.backgroundColor = UIColor(named: "MilkBlue")
+        navBarAppearance.backgroundColor = UIColor(named: Constants.navBarColor)
         
         navigationController?.navigationBar.standardAppearance = navBarAppearance
         navigationController?.navigationBar.scrollEdgeAppearance = navBarAppearance
@@ -149,16 +167,22 @@ private extension TaskListViewController {
                 addNewTask()
             }
         )
+        
         navigationController?.navigationBar.tintColor = .white
     }
     
     // MARK: Configure TableView
+    
     func setupTableView() {
         tableView.register(UITableViewCell.self,
                            forCellReuseIdentifier: cellID)
     }
+}
+
+// MARK: - AlertContoroller
+
+private extension TaskListViewController {
     
-    // MARK: Configure AlertContoroller
     func showAlert(withTitle title: String,
                    andMessage message: String,
                    task: Task? = nil) {
@@ -166,7 +190,7 @@ private extension TaskListViewController {
                                       message: message,
                                       preferredStyle: .alert)
         
-        let saveAction = UIAlertAction(title: "Save",
+        let saveAction = UIAlertAction(title: Constants.alertSaveButtonTitle,
                                        style: .default) { [weak self] _ in
             guard let newTask = alert.textFields?.first?.text, !newTask.isEmpty else { return }
             if let task = task {
@@ -176,7 +200,8 @@ private extension TaskListViewController {
             }
         }
         
-        let cancelAction = UIAlertAction(title: "Cancel", style: .destructive)
+        let cancelAction = UIAlertAction(title: Constants.alertCancelButtonTitle,
+                                         style: .destructive)
         
         alert.addAction(saveAction)
         alert.addAction(cancelAction)
@@ -184,11 +209,39 @@ private extension TaskListViewController {
             if task != nil {
                 textField.text = task?.title
             } else {
-                textField.placeholder = "New Task"
+                textField.placeholder = Constants.alertPlaceholderText
             }
         }
         
         present(alert, animated: true)
+    }
+}
+
+// MARK: - Constants
+
+private extension TaskListViewController {
+    
+    enum Constants {
+        
+        /// TableView Cell
+        static let cellID = "task"
+        
+        /// New Task Alert
+        static let newTaskAlertTitle = "New Task"
+        static let newTaskAlertMessage = "What do you want to do?"
+        
+        /// Update Task Alert
+        static let updateTaskAlertTitle = "Update Task"
+        static let updateTaskAlertMessage = "What do you want to change?"
+        
+        /// Navigation Bar
+        static let navBarTitle = "Task List"
+        static let navBarColor = "MilkBlue"
+        
+        /// Alert Controller Elements
+        static let alertSaveButtonTitle = "Save"
+        static let alertCancelButtonTitle = "Cancel"
+        static let alertPlaceholderText = "New Task"
     }
 }
 

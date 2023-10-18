@@ -9,11 +9,15 @@ import Foundation
 import CoreData
 
 // MARK: - Storage Manager
+
 final class StorageManager {
     
     // MARK: - Static properties
+    
+    /// Singleton property
     static let shared = StorageManager()
    
+    /// DB Container
     static var persistentContainer: NSPersistentContainer = {
         let container = NSPersistentContainer(name: "TaskList")
         container.loadPersistentStores(completionHandler: { (storeDescription, error) in
@@ -25,12 +29,17 @@ final class StorageManager {
     }()
     
     // MARK: - Private properties
+    
+    /// DB context
     private var context = StorageManager.persistentContainer.viewContext
 
     // MARK: - Singleton initializer
+    
     private init() {}
     
     // MARK: - Public methods
+    
+    /// Check context for changes & save
     func saveContext() {
         if context.hasChanges {
             do {
@@ -42,7 +51,9 @@ final class StorageManager {
         }
     }
     
-    // MARK: CRUD
+    // MARK: CRUD methods
+    
+    /// Save a new task to DB
     func save(_ taskName: String,
               _ completion: (Task) -> Void) {
         let task = Task(context: context)
@@ -51,6 +62,7 @@ final class StorageManager {
         completion(task)
     }
     
+    /// Get all tasks from DB
     func fetch() -> [Task] {
         let fetchRequest = Task.fetchRequest()
         do {
@@ -58,6 +70,7 @@ final class StorageManager {
         } 
     }
     
+    /// Update an existing task
     func update(_ updatedTask: Task,
                 with newName: String,
                 _ completion: (Task) -> Void) {
@@ -68,6 +81,7 @@ final class StorageManager {
         completion(task)
     }
     
+    /// Delete a task from DB
     func delete(_ task: Task,
                 _ completion: (Task) -> Void) {
         context.delete(task)

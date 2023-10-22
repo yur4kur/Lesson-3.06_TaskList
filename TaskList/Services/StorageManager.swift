@@ -12,13 +12,14 @@ import CoreData
 
 final class StorageManager {
     
-    // MARK: - Static properties
+    // MARK: - Singleton property
     
-    /// Singleton property
     static let shared = StorageManager()
+    
+    // MARK: - Private properties
    
     /// DB Container
-    static var persistentContainer: NSPersistentContainer = {
+    private var persistentContainer: NSPersistentContainer = {
         let container = NSPersistentContainer(name: "TaskList")
         container.loadPersistentStores(completionHandler: { (storeDescription, error) in
             if let error = error as NSError? {
@@ -28,14 +29,14 @@ final class StorageManager {
         return container
     }()
     
-    // MARK: - Private properties
-    
     /// DB context
-    private var context = StorageManager.persistentContainer.viewContext
+    private let context: NSManagedObjectContext
 
-    // MARK: - Singleton initializer
+    // MARK: - Initializers
     
-    private init() {}
+    private init() {
+        context = persistentContainer.viewContext
+    }
     
     // MARK: - Public methods
     
@@ -74,11 +75,9 @@ final class StorageManager {
     func update(_ updatedTask: Task,
                 with newName: String,
                 _ completion: (Task) -> Void) {
-        let tasks = fetch()
-        guard let task = tasks.first(where: { $0 == updatedTask}) else { return }
-        task.title = newName
+        updatedTask.title = newName
         saveContext()
-        completion(task)
+        completion(updatedTask)
     }
     
     /// Delete a task from DB

@@ -53,7 +53,14 @@ final class TaskListViewController: UITableViewController {
     
     /// Get tasks from DB
     private func fetchData() {
-        taskList = StorageManager.shared.fetch()
+        StorageManager.shared.fetch(completion: { [weak self] result in
+            switch result {
+            case .success(let taskList):
+                self?.taskList = taskList
+            case .failure(let error):
+                print(error.localizedDescription)
+            }
+        })
     }
     
     /// Update a task in DB as well as in the list

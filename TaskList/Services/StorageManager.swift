@@ -19,7 +19,7 @@ final class StorageManager {
     // MARK: - Private properties
    
     /// DB Container
-    private var persistentContainer: NSPersistentContainer = {
+    private let persistentContainer: NSPersistentContainer = {
         let container = NSPersistentContainer(name: "TaskList")
         container.loadPersistentStores(completionHandler: { (storeDescription, error) in
             if let error = error as NSError? {
@@ -34,6 +34,7 @@ final class StorageManager {
 
     // MARK: - Initializers
     
+    /// DB context initializer
     private init() {
         context = persistentContainer.viewContext
     }
@@ -64,11 +65,15 @@ final class StorageManager {
     }
     
     /// Get all tasks from DB
-    func fetch() -> [Task] {
+    func fetch(completion: (Result <[Task], Error>) -> Void)  {
         let fetchRequest = Task.fetchRequest()
+        
         do {
-            return (try? context.fetch(fetchRequest)) ?? []
-        } 
+            let tasks = try context.fetch(fetchRequest)
+            completion(.success(tasks))
+        } catch let error {
+            completion(.failure(error))
+        }
     }
     
     /// Update an existing task
